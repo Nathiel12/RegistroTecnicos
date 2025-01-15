@@ -1,0 +1,9 @@
+﻿@page "/Tecnico/Edit/{TecnicoId:int}"
+@inject TecnicosService tecnicosService
+@rendermode InteractiveServer
+
+@code {
+	[Parameter]
+	public int TecnicoId { get; set; }
+
+}
