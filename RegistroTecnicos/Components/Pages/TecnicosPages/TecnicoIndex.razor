@@ -1,0 +1,36 @@
+﻿@page "/Tecnico/Index"
+@inject TecnicosService tecnicosService
+@inject NavigationManager navigationManager
+
+@*HTML*@
+<PageTitle>Registro de Tecnicos</PageTitle>
+<div class="container">
+	<div class="card shadow-lg">
+		<div class="card-header space-between">
+			<h5 class="card-title">Registro de Tecnicos</h5>
+			<a href="/Tecnico/Create" class="btn btn-primary"><span class="bi bi-plus-square mt-3"></span>Crear</a>
+		</div>
+
+		<div class="card-body">
+
+			@*Labels*@
+			<div class="row">
+				@*Filtrar por*@
+				<div class="col-3">
+					<label class="col-form-label"><strong>Filtrar por</strong></label>
+				</div>
+
+				@*Valor Filtro*@
+				<div class="col-4">
+					<label class="col-form-label"><strong>Busqueda</strong></label>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+@code {
+
+}
