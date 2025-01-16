@@ -2,6 +2,7 @@
 
 @inject TecnicosService tecnicosService
 @inject NavigationManager navigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Registro de Tecnicos</PageTitle>
 <div class="container">
@@ -94,16 +95,24 @@
 
     private async Task Buscar()
     {
-        if (ValorFiltro.Trim() != "")
-        {
-            if (Filtro == "Nombres")
+            if (Filtro == "TecnicoId")
             {
-                ListaTecnicos = await tecnicosService.Listar(t => t.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
+                if (int.TryParse(ValorFiltro, out var tecnicoId))
+                {
+                    ListaTecnicos = await tecnicosService
+                        .Listar(t => t.TecnicoId == tecnicoId);
+                }
+               
+            }
+            else if (ValorFiltro.Trim() != "" && Filtro == "Nombres")
+            {
+                ListaTecnicos = await tecnicosService
+                    .Listar(t => t.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
             }
 
-        }
-        else
-            ListaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
+        
+        StateHasChanged();
+
     }
     private async Task Restablecer()
     {

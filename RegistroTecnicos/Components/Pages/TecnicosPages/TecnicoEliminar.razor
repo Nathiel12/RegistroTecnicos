@@ -1,0 +1,52 @@
+﻿@page "/Tecnico/Eliminar/{TecnicoId:int}"
+@inject TecnicosService tecnicosService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar</PageTitle>
+
+<label style="color:red;" hidden="@string.IsNullOrEmpty(Confirmacion)">@Confirmacion</label>
+<label style="color:darkred">@Pregunta</label>
+
+<div class="container">
+	<div class="card shadow-lg">
+		<div class="card-header text-center">
+			<h5 class="card-title">Eliminar Tecnico</h5>
+		</div>
+
+		<div class="card-body">
+			<p><strong>TecnicoId:</strong>@Tecnico.TecnicoId</p>
+			<p><strong>Nombres:</strong>@Tecnico.Nombres</p>
+			<p><strong>Salario por Hora:</strong>@Tecnico.SueldoHora</p>
+
+			<div class="card-footer text-center mt-2">
+				<a href="/Tecnico/Index" class="btn btn-outline-secondary"><span class="bi bi-arrow-left"></span>Cancelar</a>
+				<button class="btn btn-outline-danger" @onclick="Eliminar">Eliminar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int TecnicoId { get; set; }
+
+	private Tecnicos Tecnico { get; set; } = new Tecnicos();
+	private string Confirmacion { get; set; } = string.Empty;
+	private string Pregunta { get; set; } = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Tecnico = await tecnicosService.Buscar(TecnicoId);
+		Pregunta = "¿Esta seguro de querer eliminar el Tecnico?";
+	}
+
+	public async Task Eliminar(){
+		var eliminado = await tecnicosService.Eliminar(Tecnico.TecnicoId);
+		if(eliminado!=null){
+			Confirmacion = "Registro Eliminado Correctamente";
+		}else{
+			Confirmacion = "Error al eliminar el Registro";
+		}
+	}
+}
