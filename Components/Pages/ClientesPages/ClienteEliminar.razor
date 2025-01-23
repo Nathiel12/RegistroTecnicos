@@ -43,7 +43,7 @@
 	{
 		Cliente = await clientesService.Buscar(ClienteId);
 		Cliente.Tecnico = await tecnicosService.Buscar(Cliente.TecnicoId);
-		Pregunta = "¿Esta seguro de querer eliminar el Tecnico?";
+		Pregunta = "¿Esta seguro de querer eliminar el Cliente?";
 	}
 
 	public async Task Eliminar()
