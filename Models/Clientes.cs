@@ -8,7 +8,7 @@ namespace RegistroTecnicos.Models
         [Key]
         public int ClienteId { get; set; }
         [Required]
-        public DateOnly FechaIngreso { get; set; }
+        public DateOnly FechaIngreso { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         [Required(ErrorMessage = "Este campo es requerido")]
         public string Nombres { get; set; }

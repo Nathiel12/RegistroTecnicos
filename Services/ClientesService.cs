@@ -28,41 +28,47 @@ namespace RegistroTecnicos.Services
         public async Task<bool> ExisteNombre(string Nombres)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Tecnicos.AnyAsync(t => t.Nombres.ToLower() == Nombres.ToLower());
+            return await contexto.Clientes.AnyAsync(c => c.Nombres.ToLower() == Nombres.ToLower());
+        }
+
+        public async Task<bool> ExisteRNC(string Rnc)
+        {
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            return await contexto.Clientes.AnyAsync(c => c.Rnc.ToLower() == Rnc.ToLower());
         }
 
         private async Task<bool> Insertar(Clientes cliente)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            contexto.Tecnicos.Add(cliente);
+            contexto.Clientes.Add(cliente);
             return await contexto.SaveChangesAsync() > 0;
         }
 
-        private async Task<bool> Modificar(Tecnicos tecnico)
+        private async Task<bool> Modificar(Clientes cliente)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            contexto.Update(tecnico);
+            contexto.Update(cliente);
             return await contexto.SaveChangesAsync() > 0;
         }
 
-        public async Task<Tecnicos?> Buscar(int TecnicoId)
+        public async Task<Clientes?> Buscar(int ClienteId)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Tecnicos.FirstOrDefaultAsync(t => t.TecnicoId == TecnicoId);
+            return await contexto.Clientes.FirstOrDefaultAsync(c => c.ClienteId == ClienteId);
         }
 
-        public async Task<bool> Eliminar(int TecnicoId)
+        public async Task<bool> Eliminar(int ClienteId)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Tecnicos.AsNoTracking().Where(t => t.TecnicoId == TecnicoId).ExecuteDeleteAsync() > 0;
+            return await contexto.Clientes.AsNoTracking().Where(c => c.ClienteId == ClienteId).ExecuteDeleteAsync() > 0;
         }
 
-        public async Task<List<Tecnicos>> Listar(Expression<Func<Tecnicos, bool>> criterio)
+        public async Task<List<Clientes>> Listar(Expression<Func<Clientes, bool>> criterio)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Tecnicos.Where(criterio).AsNoTracking().ToListAsync();
+            return await contexto.Clientes.Where(criterio).AsNoTracking().ToListAsync();
         }
 
     }
 }
-}
+
