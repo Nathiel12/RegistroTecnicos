@@ -93,7 +93,7 @@
 	{
 		ErrorNombre = string.Empty;
 
-		if (await tecnicosService.ExisteNombre(Cliente.Nombres))
+		if (await clientesService.ExisteNombre(Cliente.Nombres))
 		{
 			return false;
 		}
