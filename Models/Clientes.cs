@@ -7,7 +7,6 @@ namespace RegistroTecnicos.Models
     {
         [Key]
         public int ClienteId { get; set; }
-        [Required]
         public DateOnly FechaIngreso { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         [Required(ErrorMessage = "Este campo es requerido")]
@@ -20,7 +19,7 @@ namespace RegistroTecnicos.Models
         [StringLength(11, MinimumLength = 9, ErrorMessage = "El RNC debe tener entre 9 y 11 caracteres.")]
         public string Rnc {  get; set; }
 
-        [Required(ErrorMessage = "Este campo es requerido")]
+        [Range(1, 100000, ErrorMessage = "El límite de crédito debe estar entre 0 y 100,000.")]
         public double LimiteCredito { get; set; }
 
         [ForeignKey("TecnicoId")]

@@ -33,6 +33,13 @@
 					<ValidationMessage For="(() => Cliente.Nombres)" />
 				</div>
 
+				@* Direccion *@
+				<div class="mb-3">
+					<label class="form-label"><strong>Direccion</strong></label>
+					<InputText class="form-control" @bind-Value="Cliente.Direccion"></InputText>
+					<ValidationMessage For="(() => Cliente.Direccion)" />
+				</div>
+
 				@* Rnc *@
 				<div class="mb-3">
 					<label class="form-label"><strong>RNC</strong></label>
@@ -49,11 +56,11 @@
 
 				@* Tecnico *@
 				<div class="mb-3">
-					<label class="form-label"><strong>Tecnico</strong></label>
+					<label class="form-select"><strong>Tecnico</strong></label>
 
 					<div class="input-group">
 						<InputSelect class="form-control form-select" @bind-Value="Cliente.TecnicoId">
-							<option value="" selected disabled>Elija una opcion</option>
+							<option value=0 selected disabled>Elija una opcion</option>
 							@foreach (var tecnico in ListaTecnicos){
 								<option value="@tecnico.TecnicoId">@tecnico.Nombres</option>
 							}
@@ -87,6 +94,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		Cliente = new Clientes();
 		ListaTecnicos = await tecnicosService.Listar(t => t.TecnicoId > 0);
 	}
 
@@ -105,7 +113,6 @@
 		}
 		return true;
 	}
-
 	public async Task Guardar()
 	{
 		ErrorNombre = string.Empty;
