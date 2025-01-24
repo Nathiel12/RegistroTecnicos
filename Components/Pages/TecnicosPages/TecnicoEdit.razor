@@ -67,27 +67,12 @@
 
 	}
 
-	private async Task<bool> Validar()
-	{
-		ErrorNombre = string.Empty;
-
-		if (await tecnicosService.ExisteNombre(Tecnico.Nombres))
-		{
-			return false;
-		}
-		return true;
-	}
 
 	public async Task Guardar()
 	{
 		ErrorNombre = string.Empty;
 		GuardarExito = string.Empty;
 
-		if (!await Validar())
-		{
-			ErrorNombre = "Ya existe un tecnico con este nombre";
-			return;
-		}
 		var guardo = await tecnicosService.Guardar(this.Tecnico);
 		if (guardo != null)
 		{
