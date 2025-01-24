@@ -81,6 +81,7 @@
 	public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
 	private string ErrorNombre { get; set; } = string.Empty;
 	private string GuardarExito { get; set; } = string.Empty;
+	private string ErrorRnc { get; set; } = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -92,11 +93,24 @@
 	private async Task<bool> Validar()
 	{
 		ErrorNombre = string.Empty;
+		ErrorRnc = string.Empty;
 
-		if (await clientesService.ExisteNombre(Cliente.Nombres))
+		
+		if (await clientesService.ExisteNombre(Cliente.Nombres) &&
+			Cliente.Nombres != (await clientesService.Buscar(ClienteId)).Nombres)
 		{
+			ErrorNombre = "Ya existe un cliente con este nombre.";
 			return false;
 		}
+
+		
+		if (await clientesService.ExisteRnc(Cliente.Rnc) &&
+			Cliente.Rnc != (await clientesService.Buscar(ClienteId)).Rnc)
+		{
+			ErrorRnc = "Ya existe un cliente con este RNC.";
+			return false;
+		}
+
 		return true;
 	}
 
@@ -104,10 +118,10 @@
 	{
 		ErrorNombre = string.Empty;
 		GuardarExito = string.Empty;
+		ErrorRnc = string.Empty;
 
 		if (!await Validar())
 		{
-			ErrorNombre = "Ya existe un cliente con este nombre";
 			return;
 		}
 		var guardo = await clientesService.Guardar(this.Cliente);
