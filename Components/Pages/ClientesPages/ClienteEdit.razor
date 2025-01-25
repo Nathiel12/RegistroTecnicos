@@ -92,7 +92,6 @@
 	private async Task<bool> Validar()
 	{
 		ErrorNombre = string.Empty;
-		ErrorRnc = string.Empty;
 
 		
 		if (await clientesService.ExisteNombre(Cliente.Nombres) &&
