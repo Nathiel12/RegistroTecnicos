@@ -31,7 +31,7 @@ namespace RegistroTecnicos.Services
             return await contexto.Tecnicos.AnyAsync(t => t.Nombres.ToLower() == Nombres.ToLower());
         }
 
-        private async Task<bool> Insertar(Tecnicos tecnico)
+         private async Task<bool> Insertar(Tecnicos tecnico)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
             contexto.Tecnicos.Add(tecnico);

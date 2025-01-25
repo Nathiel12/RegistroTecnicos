@@ -71,10 +71,14 @@
 	{
 		ErrorNombre = string.Empty;
 
-		if (await tecnicosService.ExisteNombre(Tecnico.Nombres))
+
+		if (await tecnicosService.ExisteNombre(Tecnico.Nombres) &&
+			Tecnico.Nombres != (await tecnicosService.Buscar(TecnicoId)).Nombres)
 		{
+			ErrorNombre = "Ya existe un tecnico con este nombre.";
 			return false;
 		}
+
 		return true;
 	}
 
@@ -85,9 +89,9 @@
 
 		if (!await Validar())
 		{
-			ErrorNombre = "Ya existe un tecnico con este nombre";
 			return;
 		}
+
 		var guardo = await tecnicosService.Guardar(this.Tecnico);
 		if (guardo != null)
 		{
