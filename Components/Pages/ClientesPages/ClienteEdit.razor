@@ -81,7 +81,6 @@
 	public List<Tecnicos> ListaTecnicos { get; set; } = new List<Tecnicos>();
 	private string ErrorNombre { get; set; } = string.Empty;
 	private string GuardarExito { get; set; } = string.Empty;
-	private string ErrorRnc { get; set; } = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -107,7 +106,7 @@
 		if (await clientesService.ExisteRnc(Cliente.Rnc) &&
 			Cliente.Rnc != (await clientesService.Buscar(ClienteId)).Rnc)
 		{
-			ErrorRnc = "Ya existe un cliente con este RNC.";
+			ErrorNombre = "Ya existe un cliente con este RNC.";
 			return false;
 		}
 
@@ -118,7 +117,6 @@
 	{
 		ErrorNombre = string.Empty;
 		GuardarExito = string.Empty;
-		ErrorRnc = string.Empty;
 
 		if (!await Validar())
 		{
