@@ -1,0 +1,121 @@
+﻿@page "/Ciudad/Index"
+
+@inject CiudadesService ciudadesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+@* HTML *@
+<PageTitle>Registro de Ciudades</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header space-between">
+            <h5 class="card-title">Registro de Ciudades</h5>
+            <a href="/Ciudad/Create" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+        </div>
+
+        <div class="card-body">
+
+            @*labels*@
+            <div class="row">
+
+                @*Filtrar por*@
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                </div>
+
+                @*ValorFiltro*@
+                <div class="col-4">
+                    <label class="col-form-label"><strong>Busqueda</strong></label>
+                </div>
+            </div>
+
+            @*Inputs y botones*@
+            <div class="row align-items-center">
+                @*filtro*@
+                <div class="col-3">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Elija una opcion</option>
+                        <option value="CiudadId">CiudadId</option>
+                        <option value="Nombre">Nombre</option>
+                    </InputSelect>
+                </div>
+
+                @*Busqueda*@
+                <div class="col-4">
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
+                    </div>
+                </div>
+
+            </div>
+            @* Tabla *@
+            <table class="table table-hover">
+                <thead class="table  table-striped text-black">
+                    <tr>
+                        <th>CiudadId</th>
+                        <th>Nombre</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ciudad in ListaCiudades)
+                    {
+                        <tr>
+                            <td> @ciudad.CiudadId</td>
+                            <td> @ciudad.Nombre</td>
+
+                            <td>
+                                <a href="/Ciudad/Edit/@ciudad.CiudadId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                            </td>
+                            <td>
+                                <a href="/Ciudad/Eliminar/@ciudad.CiudadId" class="btn btn-outline-danger bi bi-trash"></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Ciudades> ListaCiudades { get; set; } = new List<Ciudades>();
+
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaCiudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+    }
+
+    private async Task Buscar()
+    {
+        if (Filtro == "CiudadId")
+        {
+            if (int.TryParse(ValorFiltro, out var ciudadId))
+            {
+                ListaCiudades = await ciudadesService
+                    .Listar(c => c.CiudadId == ciudadId);
+            }
+
+        }
+        else if (ValorFiltro.Trim() != "" && Filtro == "Nombres")
+        {
+            ListaCiudades = await ciudadesService
+                .Listar(c => c.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+        }
+
+
+        StateHasChanged();
+
+    }
+    private async Task Restablecer()
+    {
+        ListaCiudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+        Filtro = string.Empty;
+        ValorFiltro = string.Empty;
+    }
+}

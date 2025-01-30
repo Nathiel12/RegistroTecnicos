@@ -9,5 +9,6 @@ namespace RegistroTecnicos.DAL
         }
         public virtual DbSet<Tecnicos> Tecnicos { get; set; }
         public virtual DbSet<Clientes> Clientes { get; set; }
+        public virtual DbSet<Ciudades> Ciudades { get; set; }
     }
 }
