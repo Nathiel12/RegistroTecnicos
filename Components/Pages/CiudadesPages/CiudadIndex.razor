@@ -1,6 +1,6 @@
-﻿@page "/Cliente/Index"
+﻿@page "/Ciudad/Index"
 
-@inject ClientesService clientesService
+@inject CiudadesService ciudadesService
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
@@ -35,8 +35,8 @@
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opcion</option>
-                        <option value="ClienteId">ClienteId</option>
-                        <option value="Nombres">Nombres</option>
+                        <option value="CiudadId">CiudadId</option>
+                        <option value="Nombre">Nombre</option>
                     </InputSelect>
                 </div>
 
@@ -53,28 +53,22 @@
             <table class="table table-hover">
                 <thead class="table  table-striped text-black">
                     <tr>
-                        <th>ClienteId</th>
+                        <th>CiudadId</th>
                         <th>Nombre</th>
-                        <th>Fecha de Ingreso</th>
-                        <th>Tecnico Encargado</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var cliente in ListaClientes)
+                    @foreach (var ciudad in ListaCiudades)
                     {
                         <tr>
-                            <td> @cliente.ClienteId</td>
-                            <td> @cliente.Nombres</td>
-                            <td> @cliente.FechaIngreso.ToString("dd/MM/yyyy")</td>
-                            <td> @cliente.Tecnico?.Nombres</td>
+                            <td> @ciudad.CiudadId</td>
+                            <td> @ciudad.Nombre</td>
 
                             <td>
-                                <a href="/Cliente/Edit/@cliente.ClienteId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                <a href="/Ciudad/Edit/@ciudad.CiudadId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                             </td>
                             <td>
-                                <a href="/Cliente/Eliminar/@cliente.ClienteId" class="btn btn-outline-danger bi bi-trash"></a>
+                                <a href="/Ciudad/Eliminar/@ciudad.CiudadId" class="btn btn-outline-danger bi bi-trash"></a>
                             </td>
                         </tr>
                     }
@@ -85,5 +79,41 @@
 </div>
 
 @code {
+    public List<Ciudades> ListaCiudades { get; set; } = new List<Ciudades>();
 
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaCiudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+    }
+
+    private async Task Buscar()
+    {
+        if (Filtro == "CiudadId")
+        {
+            if (int.TryParse(ValorFiltro, out var ciudadId))
+            {
+                ListaCiudades = await ciudadesService
+                    .Listar(c => c.CiudadId == ciudadId);
+            }
+
+        }
+        else if (ValorFiltro.Trim() != "" && Filtro == "Nombres")
+        {
+            ListaCiudades = await ciudadesService
+                .Listar(c => c.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+        }
+
+
+        StateHasChanged();
+
+    }
+    private async Task Restablecer()
+    {
+        ListaCiudades = await ciudadesService.Listar(c => c.CiudadId > 0);
+        Filtro = string.Empty;
+        ValorFiltro = string.Empty;
+    }
 }
