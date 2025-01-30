@@ -1,5 +1,95 @@
-﻿<h3>CiudadEdit</h3>
+﻿@page "/Ciudad/Edit/{CiudadId:int}"
+@inject CiudadesService ciudadesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+@*HTML*@
+<PageTitle>Editar</PageTitle>
+<EditForm Model="Ciudad" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator />
+
+	@* Label para notificaciones *@
+	<label style="color:red;" hidden="@string.IsNullOrEmpty(ErrorNombre)">@ErrorNombre</label>
+	<label style="color:green;" hidden="@string.IsNullOrEmpty(GuardarExito)">@GuardarExito</label>
+
+	<div class="container">
+		<div class="card shadow-lg">
+			<div class="card-header text-center">
+				<h5 class="card-title">Registro de Ciudades</h5>
+			</div>
+
+			<div class="card-body">
+
+				@* ClienteId *@
+				<div class="mb-3">
+					<label class="form-label"><strong>CiudadId</strong></label>
+					<InputNumber class="form-control" @bind-Value="Ciudad.CiudadId" readonly></InputNumber>
+				</div>
+
+				@* Nombre *@
+				<div class="mb-3">
+					<label class="form-label"><strong>Nombre</strong></label>
+					<InputText class="form-control" @bind-Value="Ciudad.Nombre"></InputText>
+					<ValidationMessage For="(() => Ciudad.Nombre)" />
+				</div>
+
+			</div>
+
+			@* Footer *@
+			<div class="card-footer text-center mt-2">
+				<a href="/Ciudad/Index" class="btn btn-danger"><span class="bi bi-arrow-left"></span>Volver</a>
+				<button type="submit" class="btn btn-success bi bi-floppy">Guardar</button>
+			</div>
+		</div>
+	</div>
+</EditForm>
 
 @code {
+	[Parameter]
+	public int CiudadId { get; set; }
 
+	private Ciudades Ciudad { get; set; } = new Ciudades();
+	private string ErrorNombre { get; set; } = string.Empty;
+	private string GuardarExito { get; set; } = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Ciudad = await ciudadesService.Buscar(CiudadId);
+
+	}
+
+	private async Task<bool> Validar()
+	{
+		ErrorNombre = string.Empty;
+
+
+		if (await ciudadesService.ExisteNombre(Ciudad.Nombre) &&
+			Ciudad.Nombre != (await ciudadesService.Buscar(CiudadId)).Nombre)
+		{
+			ErrorNombre = "Ya existe la ciudad en el registro.";
+			return false;
+		}
+		return true;
+	}
+
+	public async Task Guardar()
+	{
+		ErrorNombre = string.Empty;
+		GuardarExito = string.Empty;
+
+		if (!await Validar())
+		{
+			return;
+		}
+		var guardo = await ciudadesService.Guardar(this.Ciudad);
+		if (guardo != null)
+		{
+			GuardarExito = "Ciudad Modificada Correctamente";
+		}
+		else
+		{
+			ErrorNombre = "Error al modificar el Registro";
+		}
+
+	}
 }
