@@ -1,5 +1,58 @@
-﻿<h3>CiudadEliminar</h3>
+﻿@page "/Cliente/Eliminar/{CiudadId:int}"
+@inject CiudadesService ciudadesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+
+@* HTML *@
+<PageTitle>Eliminar</PageTitle>
+
+@*Labels para notificaciones*@
+<label style="color:red;" hidden="@string.IsNullOrEmpty(Confirmacion)">@Confirmacion</label>
+<label style="color:darkred">@Pregunta</label>
+
+<div class="container">
+	<div class="card shadow-lg">
+		<div class="card-header text-center">
+			<h5 class="card-title">Eliminar Ciudad</h5>
+		</div>
+		@*Datos y botones*@
+		<div class="card-body">
+			<p><strong>CiudadId:</strong>@Ciudad.CiudadId</p>
+			<p><strong>Nombre:</strong>@Ciudad.Nombre</p>
+
+			<div class="card-footer text-center mt-2">
+				<a href="/Cliente/Index" class="btn btn-outline-secondary"><span class="bi bi-arrow-left"></span>Cancelar</a>
+				<button class="btn btn-outline-danger" @onclick="Eliminar">Eliminar</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 @code {
+	[Parameter]
+	public int CiudadId { get; set; }
+
+	private Ciudades Ciudad { get; set; } = new Ciudades();
+	private string Confirmacion { get; set; } = string.Empty;
+	private string Pregunta { get; set; } = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Ciudad = await ciudadesService.Buscar(CiudadId);
+		Pregunta = "¿Esta seguro de querer eliminar el Cliente?";
+	}
+
+	public async Task Eliminar()
+	{
+		var eliminado = await ciudadesService.Eliminar(Ciudad.CiudadId);
+		if (eliminado != null)
+		{
+			Confirmacion = "Registro Eliminado Correctamente";
+		}
+		else
+		{
+			Confirmacion = "Error al eliminar el Registro";
+		}
+	}
 
 }
