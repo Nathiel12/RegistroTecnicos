@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net.Sockets;
+using Microsoft.EntityFrameworkCore;
 using RegistroTecnicos.Models;
 
 namespace RegistroTecnicos.DAL
@@ -10,5 +11,22 @@ namespace RegistroTecnicos.DAL
         public virtual DbSet<Tecnicos> Tecnicos { get; set; }
         public virtual DbSet<Clientes> Clientes { get; set; }
         public virtual DbSet<Ciudades> Ciudades { get; set; }
+        public virtual DbSet<Tickets> Tickets { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<Tickets>()
+                .HasOne(t => t.Cliente)
+                .WithMany()
+                .HasForeignKey(t => t.ClienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Tickets>()
+                .HasOne(t => t.Tecnico)
+                .WithMany()
+                .HasForeignKey(t => t.TecnicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
