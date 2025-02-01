@@ -54,7 +54,7 @@ namespace RegistroTecnicos.Services
         public async Task<List<Tickets>> Listar(Expression<Func<Tickets, bool>> criterio)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Tickets.Where(criterio).AsNoTracking().ToListAsync();
+            return await contexto.Tickets.Where(criterio).Include(c => c.Cliente).Include(t => t.Tecnico).AsNoTracking().ToListAsync();
         }
 
     }
