@@ -1,4 +1,4 @@
-﻿@page "/Ticket/Edit"
+﻿@page "/Ticket/Edit/{TicketId:int}"
 @inject TicketsService ticketsService
 @inject ClientesService clientesService
 @inject TecnicosService tecnicosService
@@ -29,18 +29,18 @@
 
 				@* Prioridad *@
 				<div class="mb-3">
-					<label class="form-select"><strong>Prioridad</strong></label>
+					<label class="form-label"><strong>Prioridad</strong></label>
 
 					<div class="mb-3">
 						<label class="form-label"><strong>Prioridad</strong></label>
-						<InputSelect class="form-control" value="@Ticket.Prioridad">
-							<option value="" selected disabled>Seleccione una prioridad</option>
+						<InputSelect class="form-control" @bind-Value="Ticket.Prioridad">
+							<option value=0 selected disabled>Seleccione una prioridad</option>
 							<option value="Baja">Baja</option>
 							<option value="Media">Media</option>
 							<option value="Alta">Alta</option>
 							<option value="Critica">Critica</option>
 						</InputSelect>
-						<ValidationMessage For="@(() => Ticket.Prioridad)" />
+						<ValidationMessage For="(() => Ticket.Prioridad)" />
 					</div>
 				</div>
 
@@ -55,7 +55,7 @@
 				<div class="mb-3">
 					<label class="form-label"><strong>Descripcion</strong></label>
 					<textarea class="form-control" @bind="Ticket.Descripcion" rows="5" placeholder="Describa el problema en detalle..."></textarea>
-					<ValidationMessage For="@(() => Ticket.Descripcion)" />
+					<ValidationMessage For="(() => Ticket.Descripcion)" />
 				</div>
 
 				@* TiempoInvertido *@
@@ -67,11 +67,11 @@
 
 				@* Tecnico *@
 				<div class="mb-3">
-					<label class="form-select"><strong>Tecnico Encargado</strong></label>
+					<label class="form-label"><strong>Tecnico Encargado</strong></label>
 
 					<div class="input-group">
 						<InputSelect class="form-control form-select" @bind-Value="Ticket.TecnicoId">
-							<option value="" selected disabled>Seleccione el Tecnico Encargado</option>
+							<option value=0 selected disabled>Seleccione el Tecnico Encargado</option>
 							@foreach (var tecnico in ListaTecnicos)
 							{
 								<option value="@tecnico.TecnicoId">@tecnico.Nombres</option>
@@ -83,11 +83,11 @@
 
 				@* Cliente *@
 				<div class="mb-3">
-					<label class="form-select"><strong>Cliente</strong></label>
+					<label class="form-label"><strong>Cliente</strong></label>
 
 					<div class="input-group">
 						<InputSelect class="form-control form-select" @bind-Value="Ticket.ClienteId">
-							<option value="" selected disabled>Seleccione al Cliente correspondiente</option>
+							<option value=0 selected disabled>Seleccione al Cliente correspondiente</option>
 							@foreach (var cliente in ListaClientes)
 							{
 								<option value="@cliente.ClienteId">@cliente.Nombres</option>
@@ -104,7 +104,6 @@
 			<div class="card-footer text-center mt-2">
 				<a href="/Ticket/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-left"></span>Volver</a>
 				<button type="submit" class="btn btn-outline-success bi bi-floppy">Guardar</button>
-				<button type="reset" class="btn btn-outline-primary bi bi-plus" @onclick="Nuevo">Nuevo</button>
 			</div>
 		</div>
 	</div>
@@ -117,17 +116,12 @@
 
 	private Tickets Ticket { get; set; } = new Tickets();
 
-	public List<Tecnicos> ListaTecnicos { get; set; }
+	public List<Tecnicos> ListaTecnicos { get; set; } = [];
 
-	public List<Clientes> ListaClientes { get; set; }
+	public List<Clientes> ListaClientes { get; set; } = [];
 
 	private string ErrorNombre { get; set; } = string.Empty;
 	private string GuardarExito { get; set; } = string.Empty;
-
-	public void Nuevo()
-	{
-		this.Ticket = new Tickets();
-	}
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -145,7 +139,6 @@
 		if (guardo != null)
 		{
 			GuardarExito = "Ticket Guardado Correctamente";
-			Nuevo();
 		}
 		else
 		{
