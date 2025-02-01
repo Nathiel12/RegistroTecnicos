@@ -106,50 +106,21 @@
 
     private async Task Buscar()
     {
-        switch(Filtro){
-            case "TicketId":
-                if (int.TryParse(ValorFiltro, out var ticketId))
-                {
-                    ListaTickets = await ticketsService
-                        .Listar(t => t.TicketId == ticketId);
-                }
-                break;
-
-            case "Baja":
-                if (!string.IsNullOrEmpty(ValorFiltro))
-                {
-                    ListaTickets = await ticketsService
-                        .Listar(t => t.Prioridad.ToLower().Contains("baja"));
-                }
-                break;
-
-            case "Media":
-                if (!string.IsNullOrEmpty(ValorFiltro))
-                {
-                    ListaTickets = await ticketsService
-                        .Listar(t => t.Prioridad.ToLower().Contains("media"));
-                }
-                break;
-
-            case "Alta":
-                if (!string.IsNullOrEmpty(ValorFiltro))
-                {
-                    ListaTickets = await ticketsService
-                        .Listar(t => t.Prioridad.ToLower().Contains("alta"));
-                }
-                break;
-
-            case "Critica":
-                if (!string.IsNullOrEmpty(ValorFiltro))
-                {
-                    ListaTickets = await ticketsService
-                        .Listar(t => t.Prioridad.ToLower().Contains("critica"));
-                }
-                break;
+        if (Filtro == "TicketId")
+        {
+            if (int.TryParse(ValorFiltro, out var ticketId))
+            {
+                ListaTickets = await ticketsService
+                    .Listar(t => t.TicketId == ticketId);
+            }
+        }
+        else if (!string.IsNullOrEmpty(Filtro))
+        {
+            ListaTickets = await ticketsService
+                .Listar(t => t.Prioridad.ToLower() == Filtro.ToLower());
         }
 
         StateHasChanged();
-
     }
     private async Task Restablecer()
     {
