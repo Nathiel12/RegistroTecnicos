@@ -31,12 +31,6 @@ namespace RegistroTecnicos.Services
             return await contexto.Clientes.AnyAsync(c => c.Nombres.ToLower() == Nombres.ToLower());
         }
 
-        public async Task<bool> ExisteRnc(string Rnc)
-        {
-            await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.Clientes.AnyAsync(c => c.Nombres.ToLower() == Rnc.ToLower());
-        }
-
         public async Task<bool> ExisteRNC(string Rnc)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
