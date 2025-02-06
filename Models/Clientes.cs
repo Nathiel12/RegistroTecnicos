@@ -16,7 +16,7 @@ namespace RegistroTecnicos.Models
         public string Direccion {  get; set; }
 
         [Required]
-        [StringLength( 9, ErrorMessage = "El RNC debe tener entre 9 y 11 caracteres.")]
+        [StringLength(11, MinimumLength = 9, ErrorMessage = "El RNC debe tener entre 9 y 11 caracteres.")]
         public string Rnc {  get; set; }
 
         [Range(1, 100000, ErrorMessage = "El límite de crédito debe estar entre 0 y 100,000.")]
