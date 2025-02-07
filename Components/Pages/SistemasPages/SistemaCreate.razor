@@ -1,0 +1,75 @@
+﻿@page "/Sistema/Create"
+@inject SistemasService sisService
+@rendermode InteractiveServer
+
+@*HTML*@
+<PageTitle>Create</PageTitle>
+<EditForm Model="Sistema" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator/>
+
+	@*Notificaciones*@
+	<label style="color:red;" hidden="@string.IsNullOrEmpty(Error)">@Error</label>
+	<label style="color:green;" hidden="@string.IsNullOrEmpty(Success)">@Success</label>
+
+	<div class="container">
+		<div class="card shadow-lg">
+			<div class="card-header text-center">
+				<h5 class="card-title">Registro de Sistemas</h5>
+			</div>
+
+			<div class="card-body">
+
+				<div class="mb-3">
+					<label class="form-label"><strong>SistemaId</strong></label>
+					<InputNumber class="form-control" @bind-Value="Sistema.SistemaId" readonly></InputNumber>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label"><strong>Descripcion</strong></label>
+					<textarea class="form-control" @bind="Sistema.Descripcion" rows="5"></textarea>
+					<ValidationMessage For="(() => Sistema.Descripcion)"/>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label"><strong>Complejidad</strong></label>
+					<InputSelect class="form-control" @bind-Value="Sistema.Complejidad">
+						<option value="" selected disabled>Seleccione el nivel de complejidad</option>
+						<option value="Baja">Baja</option>
+						<option value="Media">Media</option>
+						<option value="Alta">Alta</option>
+					</InputSelect>
+				</div>
+
+			</div>
+
+			@*Footer*@
+			<div class="card-footer text-center mt-2">
+				<a href="/Sistema/Index" class="btn btn-outline-danger"><span class="bi bi-arrow-left"></span>Volver</a>
+				<button type="submit" class="btn btn-outline-success bi bi-floppy">Guardar</button>
+				<button type="reset" class="btn btn-outline-secondary bi bi-plus" @onclick="Nuevo">Nuevo</button>
+			</div>
+		</div>
+	</div>
+
+</EditForm>
+
+@code {
+	private Sistemas Sistema { get; set; } = new Sistemas();
+	private string Error { get; set; } = string.Empty;
+	private string Success { get; set; } = string.Empty;
+
+	public void Nuevo(){
+		this.Sistema = new Sistemas();
+	}
+	public async Task Guardar(){
+		Error = string.Empty;
+		Success = string.Empty;
+		var guardo = await sisService.Guardar(this.Sistema);
+		if(guardo!=null){
+			Success = "Sistema Guardado Correctamente";
+			Nuevo();
+		}else{
+			Error = "Error al Guardar el Registro";
+		}
+	}
+}
