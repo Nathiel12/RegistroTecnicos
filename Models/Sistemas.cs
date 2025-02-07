@@ -9,6 +9,6 @@ namespace RegistroTecnicos.Models
         [Required(ErrorMessage ="Este campo es requerido")]
         public string Descripcion { get; set; }
         [Required(ErrorMessage ="Este campo es requerido")]
-        public string Complejidad { get; set; }
+        public double Complejidad { get; set; }
     }
 }
