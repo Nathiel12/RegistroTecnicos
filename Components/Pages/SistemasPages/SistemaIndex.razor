@@ -98,7 +98,7 @@
         }
         else if (Filtro == "Complejidad")
         {
-            if (int.TryParse(ValorFiltro, out var complejidad))
+            if (double.TryParse(ValorFiltro, out var complejidad))
             {
                 ListaSistemas = await sisService
                     .Listar(s => s.Complejidad == complejidad);
