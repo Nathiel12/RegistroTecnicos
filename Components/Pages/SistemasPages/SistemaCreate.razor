@@ -32,12 +32,8 @@
 
 				<div class="mb-3">
 					<label class="form-label"><strong>Complejidad</strong></label>
-					<InputSelect class="form-control" @bind-Value="Sistema.Complejidad">
-						<option value="" selected disabled>Seleccione el nivel de complejidad</option>
-						<option value="Baja">Baja</option>
-						<option value="Media">Media</option>
-						<option value="Alta">Alta</option>
-					</InputSelect>
+					<InputNumber class="form-control" @bind-Value="Sistema.Complejidad"></InputNumber>
+					<ValidationMessage For="(() => Sistema.Complejidad)"/>
 				</div>
 
 			</div>

@@ -5,7 +5,7 @@
 <PageTitle>Registro de Sistemas</PageTitle>
 <div class="container">
 	<div class="card shadow-lg">
-		<div class="card-header text-center">
+		<div class="card-header space-between">
 			<h5 class="card-title">Registro de Sistemas</h5>
 			<a href="/Sistema/Create" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
 		</div>
@@ -96,11 +96,15 @@
                     .Listar(s => s.SistemaId == sistemaId);
             }
         }
-        else if (!string.IsNullOrEmpty(Filtro))
+        else if (Filtro == "Complejidad")
         {
-            ListaSistemas = await sisService
-                .Listar(s => s.Complejidad.ToLower() == Filtro.ToLower());
+            if (int.TryParse(ValorFiltro, out var complejidad))
+            {
+                ListaSistemas = await sisService
+                    .Listar(s => s.Complejidad == complejidad);
+            }
         }
+        
 
         StateHasChanged();
 
@@ -112,4 +116,4 @@
         ValorFiltro = string.Empty;
     }
 }
-}
+
