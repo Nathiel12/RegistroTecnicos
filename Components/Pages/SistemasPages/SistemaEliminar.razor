@@ -1,0 +1,56 @@
+﻿@page "/Sistema/Eliminar/{SistemaId:int}"
+@inject SistemasService sisService
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar</PageTitle>
+<label style="color:red" hidden="@string.IsNullOrEmpty(Confirmar)">@Confirmar</label>
+<label style="color:crimson">@Pregunta</label>
+
+<div class="container">
+	<div class="card shadow-lg">
+
+		<div class="card-header text-center">
+			<h5 class="card-title">Eliminar Sistema</h5>
+		</div>
+
+		<div class="card-body">
+			<p><strong>SistemaId:</strong>@Sistema.SistemaId</p>
+			<p><strong>Descripcion:</strong>@Sistema.Descripcion</p>
+			<p><strong>Complejidad:</strong>@Sistema.Complejidad.ToString("N2")</p>
+		</div>
+
+		<div class="card-footer text-center mt-2">
+			<a href="/Sistema/Index" class="btn btn-outline-secondary bi bi-arrow-left">Volver</a>
+			<button class="btn btn-outline-danger" @onclick="Eliminar">Eliminar</button>
+		</div>
+
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public int SistemaId { get; set; }
+
+	private Sistemas Sistema { get; set; } = new Sistemas();
+	private string Pregunta { get; set; } = string.Empty;
+	private string Confirmar { get; set; } = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Sistema = await sisService.Buscar(SistemaId);
+		Pregunta = "¿Esta serguro de querer eliminar el Sistema?";
+	}
+	public async Task Eliminar()
+	{
+		var eliminado = await sisService.Eliminar(Sistema.SistemaId);
+		if (eliminado != null)
+		{
+			Confirmar = "Registro eliminado";
+		}
+		else
+		{
+			Confirmar = "Error al eliminar el registro";
+		}
+	}
+
+}

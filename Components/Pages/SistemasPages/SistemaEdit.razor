@@ -1,0 +1,71 @@
+﻿@page "/Sistema/Edit/{SistemaId:int}"
+@inject SistemasService sisService
+@rendermode InteractiveServer
+
+<PageTitle>Editar</PageTitle>
+<label style="color:green;" hidden="@string.IsNullOrEmpty(Success)">@Success</label>
+<label style="color:red;" hidden="@string.IsNullOrEmpty(Error)">@Error</label>
+
+<EditForm Model="Sistema" OnValidSubmit="Guardar">
+	<DataAnnotationsValidator/>
+	<div class="container">
+		<div class="card shadow-lg">
+			<div class="card-header text-center">
+				<h5 class="card-title">Editar Sistema</h5>
+			</div>
+
+			<div class="card-body">
+
+				<div class="mb-3">
+					<label class="form-label"><strong>SistemaId</strong></label>
+					<InputNumber class="form-control" @bind-Value="Sistema.SistemaId"></InputNumber>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label"><strong>Descripcion</strong></label>
+					<textarea class="form-control" @bind="Sistema.Descripcion" rows="5"></textarea>
+					<ValidationMessage For="(() => Sistema.Descripcion)"/>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label"><strong>Complejidad</strong></label>
+					<InputNumber class="form-control" @bind-Value="Sistema.Complejidad"></InputNumber>
+					<ValidationMessage For="(() => Sistema.Complejidad)"/>
+				</div>
+			</div>
+
+			<div class="card-footer text-center mt-2">
+				<a href="/Sistema/Index" class="btn btn-outline-secondary bi bi-arrow-left">Volver</a>
+				<button class="btn btn-outline-success bi bi-floppy">Guardar</button>
+			</div>
+
+		</div>
+	</div>
+
+</EditForm>
+
+@code {
+	[Parameter]
+	public int SistemaId { get; set; }
+
+	private Sistemas Sistema { get; set; } = new Sistemas();
+	private string Success { get; set; } = string.Empty;
+	private string Error { get; set; } = string.Empty;
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		Sistema = await sisService.Buscar(SistemaId);
+	}
+	private async Task Guardar(){
+		Success = string.Empty;
+		Error = string.Empty;
+		var guardo = await sisService.Guardar(this.Sistema);
+		if(guardo!=null){
+			Success="Guardado Correctamente";
+		}else{
+			Error = "Error al guardar el registro";
+		}
+	}
+}

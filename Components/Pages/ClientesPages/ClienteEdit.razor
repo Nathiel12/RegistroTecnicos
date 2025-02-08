@@ -102,7 +102,7 @@
 		}
 
 		
-		if (await clientesService.ExisteRnc(Cliente.Rnc) &&
+		if (await clientesService.ExisteRNC(Cliente.Rnc) &&
 			Cliente.Rnc != (await clientesService.Buscar(ClienteId)).Rnc)
 		{
 			ErrorNombre = "Ya existe un cliente con este RNC.";

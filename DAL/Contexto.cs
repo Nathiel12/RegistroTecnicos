@@ -12,6 +12,7 @@ namespace RegistroTecnicos.DAL
         public virtual DbSet<Clientes> Clientes { get; set; }
         public virtual DbSet<Ciudades> Ciudades { get; set; }
         public virtual DbSet<Tickets> Tickets { get; set; }
+        public virtual DbSet<Sistemas> Sistemas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
